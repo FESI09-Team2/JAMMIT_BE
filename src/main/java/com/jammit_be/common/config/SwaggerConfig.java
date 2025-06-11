@@ -9,10 +9,11 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+
 @OpenAPIDefinition(
         servers = {
+                @Server(url = "https://api.jammit.store"),
                 @Server(url = "http://52.79.131.132:8083"),
-                @Server(url = "https://api.jammit.shop"),
                 @Server(url = "http://localhost:8083")
         })
 @Configuration

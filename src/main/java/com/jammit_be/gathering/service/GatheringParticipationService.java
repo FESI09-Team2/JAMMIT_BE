@@ -316,6 +316,7 @@ public class GatheringParticipationService {
                             .status(participant.getStatus())
                             .createdAt(participant.getCreatedAt())
                             .introduction(participant.getIntroduction())
+                            .profileImagePath(user.getProfileImagePath())
                     .build());
         }
 

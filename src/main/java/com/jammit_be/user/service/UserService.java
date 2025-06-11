@@ -74,6 +74,11 @@ public class UserService {
         // 선호 장르와 선호 밴드 세션 설정
         user.updatePreferredGenres(createUserRequest.getPreferredGenres());
         user.updatePreferredBandSessions(createUserRequest.getPreferredBandSessions());
+        
+        // 프로필 이미지 경로 설정
+        if (createUserRequest.getProfileImagePath() != null) {
+            user.changeProfileImage(null, createUserRequest.getProfileImagePath());
+        }
 
         userRepository.save(user);
         
