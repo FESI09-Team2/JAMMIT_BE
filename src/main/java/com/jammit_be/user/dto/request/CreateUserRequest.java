@@ -39,4 +39,7 @@ public class CreateUserRequest {
     private List<Genre> preferredGenres;
     @Schema(description = "선호하는 밴드 세션 목록", example = "[\"VOCAL\", \"ELECTRIC_GUITAR\", \"BASS\", \"KEYBOARD\"]")
     private List<BandSession> preferredBandSessions;
+
+    @Schema(description = "프로필 이미지 경로", example = "2024/01/11/uuid-profile.jpg", nullable = true)
+    private String profileImagePath;
 }

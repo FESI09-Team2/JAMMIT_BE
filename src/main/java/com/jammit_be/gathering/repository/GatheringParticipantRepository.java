@@ -101,4 +101,8 @@ public interface GatheringParticipantRepository extends JpaRepository<GatheringP
     // 특정 유저가 특정 모임에서 참여한 밴드 세션 조회 (COMPLETED 상태)
     @Query("SELECT gp.name FROM GatheringParticipant gp WHERE gp.user = :user AND gp.gathering.id = :gatheringId AND gp.status = com.jammit_be.common.enums.ParticipantStatus.COMPLETED")
     Optional<BandSession> findBandSessionByUserAndGathering(@Param("user") User user, @Param("gatheringId") Long gatheringId);
+    
+    // 특정 유저가 특정 모임의 주최자인지 확인
+    @Query("SELECT COUNT(g) > 0 FROM Gathering g WHERE g.id = :gatheringId AND g.createdBy = :user")
+    boolean isHostOfGathering(@Param("user") User user, @Param("gatheringId") Long gatheringId);
 }

@@ -46,4 +46,5 @@ public enum GatheringStatus {
     public boolean isJoinable() {
         return this == RECRUITING;
     }
-} 
+    
+}

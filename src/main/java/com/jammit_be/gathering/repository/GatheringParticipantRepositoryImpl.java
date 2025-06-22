@@ -56,7 +56,7 @@ public class GatheringParticipantRepositoryImpl implements GatheringParticipantR
                                 .from(gatheringSession)
                                 .where(gatheringSession.gathering.eq(gathering)),
 
-                        gathering.status.stringValue()
+                        gathering.status
                 ))
                 .from(gatheringParticipant) // 참가자를 기준으로 시작
                 .join(gatheringParticipant.gathering, gathering)

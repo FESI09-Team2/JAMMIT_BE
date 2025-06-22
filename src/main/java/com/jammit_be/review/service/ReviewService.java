@@ -63,16 +63,18 @@ public class ReviewService {
             throw new AlertException("완료된 모임만 리뷰를 작성할 수 있습니다.");
         }
         
-        // 4. 리뷰 작성자가 해당 모임에 참여 완료했는지 확인
+        // 4. 리뷰 작성자가 해당 모임에 참여 완료했거나 주최자인지 확인
         boolean reviewerParticipated = gatheringParticipantRepository.isParticipationCompleted(reviewer, gathering);
-        if (!reviewerParticipated) {
-            throw new AlertException("모임에 참여 완료한 사용자만 리뷰를 작성할 수 있습니다.");
+        boolean reviewerIsHost = gatheringParticipantRepository.isHostOfGathering(reviewer, gathering.getId());
+        if (!reviewerParticipated && !reviewerIsHost) {
+            throw new AlertException("모임에 참여 완료한 사용자 또는 주최자만 리뷰를 작성할 수 있습니다.");
         }
         
-        // 5. 리뷰 대상자가 해당 모임에 참여 완료했는지 확인
+        // 5. 리뷰 대상자가 해당 모임에 참여 완료했거나 주최자인지 확인
         boolean revieweeParticipated = gatheringParticipantRepository.isParticipationCompleted(reviewee, gathering);
-        if (!revieweeParticipated) {
-            throw new AlertException("모임에 참여 완료한 사용자에게만 리뷰를 작성할 수 있습니다.");
+        boolean revieweeIsHost = gatheringParticipantRepository.isHostOfGathering(reviewee, gathering.getId());
+        if (!revieweeParticipated && !revieweeIsHost) {
+            throw new AlertException("모임에 참여 완료한 사용자 또는 주최자에게만 리뷰를 작성할 수 있습니다.");
         }
 
         // 6. 이미 해당 모임에서 해당 사용자에 대한 리뷰를 작성했는지 확인

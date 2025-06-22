@@ -2,6 +2,7 @@ package com.jammit_be.gathering.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import com.jammit_be.common.enums.GatheringStatus;
 
 import java.time.LocalDateTime;
 
@@ -33,5 +34,5 @@ public class CompletedGatheringResponse {
     private final int totalCurrent;
 
     @Schema(description = "모임 상태", example = "COMPLETED")
-    private final String status;
+    private final GatheringStatus status;
 }
