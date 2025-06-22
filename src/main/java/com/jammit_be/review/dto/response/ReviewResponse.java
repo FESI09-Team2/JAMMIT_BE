@@ -28,8 +28,8 @@ public class ReviewResponse {
     @Schema(description = "리뷰 작성자 닉네임", example = "작성자닉네임")
     private String reviewerNickname;
     
-    @Schema(description = "리뷰 작성자의 밴드 세션", example = "[\"VOCAL\", \"GUITAR\"]")
-    private List<BandSession> reviewerBandSessions;
+    @Schema(description = "리뷰 작성자의 밴드 세션", example = "DRUM")
+    private BandSession reviewerBandSession;
 
     @Schema(description = "리뷰 대상자 ID", example = "2")
     private Long revieweeId;
@@ -82,14 +82,15 @@ public class ReviewResponse {
     @Schema(description = "수정 일시", example = "2023-06-01T12:00:00")
     private LocalDateTime updatedAt;
 
+    /*
     public static ReviewResponse of(Review review) {
         return ReviewResponse.builder()
                 .id(review.getId())
                 .reviewerId(review.getReviewer().getId())
                 .reviewerNickname(review.getReviewer().getNickname())
-                .reviewerBandSessions(review.getReviewer().getUserBandSessions().stream()
-                        .map(session -> session.getName())
-                        .collect(Collectors.toList()))
+                .reviewerBandSession(review.getReviewer().getUserBandSessions().stream()
+                        .findFirst()
+                        .orElse(null))
                 .revieweeId(review.getReviewee().getId())
                 .revieweeNickname(review.getReviewee().getNickname())
                 .gatheringId(review.getGathering().getId())
@@ -109,4 +110,5 @@ public class ReviewResponse {
                 .updatedAt(review.getUpdatedAt())
                 .build();
     }
+    */
 } 

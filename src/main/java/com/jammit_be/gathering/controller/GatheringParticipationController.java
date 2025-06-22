@@ -201,11 +201,9 @@ public class GatheringParticipationController {
             }
     )
     @GetMapping("/my/completed")
-    public CommonResponse<List<CompletedGatheringResponse>> getMyCompletedGatherings(
-            @AuthenticationPrincipal User currentUser
-    ) {
+    public CommonResponse<List<CompletedGatheringResponse>> getMyCompletedGatherings() {
         List<CompletedGatheringResponse> response =
-                gatheringParticipationService.getMyCompletedGatherings(currentUser);
+                gatheringParticipationService.getMyCompletedGatherings();
 
         return CommonResponse.ok(response);
     }

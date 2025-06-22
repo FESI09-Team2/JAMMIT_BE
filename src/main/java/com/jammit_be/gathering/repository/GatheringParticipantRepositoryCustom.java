@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface GatheringParticipantRepositoryCustom {
 
-    List<CompletedGatheringResponse> findCompletedGatheringsByUser(User  user);
+    List<CompletedGatheringResponse> findCompletedGatheringsByUser(String email);
 }

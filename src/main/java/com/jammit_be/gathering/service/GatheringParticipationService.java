@@ -364,7 +364,7 @@ public class GatheringParticipationService {
     }
 
     @Transactional(readOnly = true)
-    public List<CompletedGatheringResponse> getMyCompletedGatherings(User user) {
-        return gatheringParticipantRepository.findCompletedGatheringsByUser(user);
+    public List<CompletedGatheringResponse> getMyCompletedGatherings() {
+        return gatheringParticipantRepository.findCompletedGatheringsByUser(AuthUtil.getEmail());
     }
 }

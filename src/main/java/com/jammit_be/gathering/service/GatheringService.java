@@ -61,11 +61,6 @@ public class GatheringService {
 
         Gathering saved = gatheringRepository.save(gathering);
 
-        // 주최자 참여자로 저장
-        GatheringParticipant hostParticipant = GatheringParticipant.createHostParticipant(user, saved);
-        gatheringParticipantRepository.save(hostParticipant);
-
-
         return GatheringCreateResponse.from(saved);
     }
 

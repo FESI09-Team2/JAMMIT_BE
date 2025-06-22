@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
 import com.jammit_be.common.dto.response.PageResponse;
 import com.jammit_be.review.dto.response.UnwrittenReviewProjection;
 import com.jammit_be.review.dto.response.UnwrittenReviewListResponse;
+import com.jammit_be.common.enums.BandSession;
 
 @Service
 @RequiredArgsConstructor
@@ -102,7 +103,35 @@ public class ReviewService {
         review.setKeepingPromises(request.getIsKeepingPromises());
 
         reviewRepository.save(review);
-        return ReviewResponse.of(review);
+        
+        // 리뷰 작성자가 해당 모임에서 참여한 밴드 세션 조회
+        BandSession reviewerBandSession = gatheringParticipantRepository
+                .findBandSessionByUserAndGathering(review.getReviewer(), review.getGathering().getId())
+                .orElse(null); // 주최자의 경우 null
+        
+        return ReviewResponse.builder()
+                .id(review.getId())
+                .reviewerId(review.getReviewer().getId())
+                .reviewerNickname(review.getReviewer().getNickname())
+                .reviewerBandSession(reviewerBandSession)
+                .revieweeId(review.getReviewee().getId())
+                .revieweeNickname(review.getReviewee().getNickname())
+                .gatheringId(review.getGathering().getId())
+                .gatheringName(review.getGathering().getName())
+                .gatheringThumbnail(review.getGathering().getThumbnail())
+                .gatheringHostNickname(review.getGathering().getCreatedBy().getNickname())
+                .content(review.getContent())
+                .isPracticeHelped(review.isPracticeHelped())
+                .isGoodWithMusic(review.isGoodWithMusic())
+                .isGoodWithOthers(review.isGoodWithOthers())
+                .isSharesPracticeResources(review.isSharesPracticeResources())
+                .isManagingWell(review.isManagingWell())
+                .isHelpful(review.isHelpful())
+                .isGoodLearner(review.isGoodLearner())
+                .isKeepingPromises(review.isKeepingPromises())
+                .createdAt(review.getCreatedAt())
+                .updatedAt(review.getUpdatedAt())
+                .build();
     }
 
     /**
@@ -131,7 +160,36 @@ public class ReviewService {
     public List<ReviewResponse> getReviewsByReviewer() {
         Long reviewerId = AuthUtil.getUserInfo().getId();
         return reviewRepository.findAllByReviewerId(reviewerId).stream()
-                .map(ReviewResponse::of)
+                .map(review -> {
+                    // 리뷰 작성자가 해당 모임에서 참여한 밴드 세션 조회
+                    BandSession reviewerBandSession = gatheringParticipantRepository
+                            .findBandSessionByUserAndGathering(review.getReviewer(), review.getGathering().getId())
+                            .orElse(null); // 주최자의 경우 null
+                    
+                    return ReviewResponse.builder()
+                            .id(review.getId())
+                            .reviewerId(review.getReviewer().getId())
+                            .reviewerNickname(review.getReviewer().getNickname())
+                            .reviewerBandSession(reviewerBandSession)
+                            .revieweeId(review.getReviewee().getId())
+                            .revieweeNickname(review.getReviewee().getNickname())
+                            .gatheringId(review.getGathering().getId())
+                            .gatheringName(review.getGathering().getName())
+                            .gatheringThumbnail(review.getGathering().getThumbnail())
+                            .gatheringHostNickname(review.getGathering().getCreatedBy().getNickname())
+                            .content(review.getContent())
+                            .isPracticeHelped(review.isPracticeHelped())
+                            .isGoodWithMusic(review.isGoodWithMusic())
+                            .isGoodWithOthers(review.isGoodWithOthers())
+                            .isSharesPracticeResources(review.isSharesPracticeResources())
+                            .isManagingWell(review.isManagingWell())
+                            .isHelpful(review.isHelpful())
+                            .isGoodLearner(review.isGoodLearner())
+                            .isKeepingPromises(review.isKeepingPromises())
+                            .createdAt(review.getCreatedAt())
+                            .updatedAt(review.getUpdatedAt())
+                            .build();
+                })
                 .collect(Collectors.toList());
     }
 
@@ -142,7 +200,36 @@ public class ReviewService {
     public List<ReviewResponse> getReviewsByReviewee() {
         Long revieweeId = AuthUtil.getUserInfo().getId();
         return reviewRepository.findAllByRevieweeId(revieweeId).stream()
-                .map(ReviewResponse::of)
+                .map(review -> {
+                    // 리뷰 작성자가 해당 모임에서 참여한 밴드 세션 조회
+                    BandSession reviewerBandSession = gatheringParticipantRepository
+                            .findBandSessionByUserAndGathering(review.getReviewer(), review.getGathering().getId())
+                            .orElse(null); // 주최자의 경우 null
+                    
+                    return ReviewResponse.builder()
+                            .id(review.getId())
+                            .reviewerId(review.getReviewer().getId())
+                            .reviewerNickname(review.getReviewer().getNickname())
+                            .reviewerBandSession(reviewerBandSession)
+                            .revieweeId(review.getReviewee().getId())
+                            .revieweeNickname(review.getReviewee().getNickname())
+                            .gatheringId(review.getGathering().getId())
+                            .gatheringName(review.getGathering().getName())
+                            .gatheringThumbnail(review.getGathering().getThumbnail())
+                            .gatheringHostNickname(review.getGathering().getCreatedBy().getNickname())
+                            .content(review.getContent())
+                            .isPracticeHelped(review.isPracticeHelped())
+                            .isGoodWithMusic(review.isGoodWithMusic())
+                            .isGoodWithOthers(review.isGoodWithOthers())
+                            .isSharesPracticeResources(review.isSharesPracticeResources())
+                            .isManagingWell(review.isManagingWell())
+                            .isHelpful(review.isHelpful())
+                            .isGoodLearner(review.isGoodLearner())
+                            .isKeepingPromises(review.isKeepingPromises())
+                            .createdAt(review.getCreatedAt())
+                            .updatedAt(review.getUpdatedAt())
+                            .build();
+                })
                 .collect(Collectors.toList());
     }
 
@@ -157,7 +244,36 @@ public class ReviewService {
         Page<Review> reviewPage = reviewRepository.findAllByRevieweeId(revieweeId, pageable);
         
         List<ReviewResponse> content = reviewPage.getContent().stream()
-                .map(ReviewResponse::of)
+                .map(review -> {
+                    // 리뷰 작성자가 해당 모임에서 참여한 밴드 세션 조회
+                    BandSession reviewerBandSession = gatheringParticipantRepository
+                            .findBandSessionByUserAndGathering(review.getReviewer(), review.getGathering().getId())
+                            .orElse(null); // 주최자의 경우 null
+                    
+                    return ReviewResponse.builder()
+                            .id(review.getId())
+                            .reviewerId(review.getReviewer().getId())
+                            .reviewerNickname(review.getReviewer().getNickname())
+                            .reviewerBandSession(reviewerBandSession)
+                            .revieweeId(review.getReviewee().getId())
+                            .revieweeNickname(review.getReviewee().getNickname())
+                            .gatheringId(review.getGathering().getId())
+                            .gatheringName(review.getGathering().getName())
+                            .gatheringThumbnail(review.getGathering().getThumbnail())
+                            .gatheringHostNickname(review.getGathering().getCreatedBy().getNickname())
+                            .content(review.getContent())
+                            .isPracticeHelped(review.isPracticeHelped())
+                            .isGoodWithMusic(review.isGoodWithMusic())
+                            .isGoodWithOthers(review.isGoodWithOthers())
+                            .isSharesPracticeResources(review.isSharesPracticeResources())
+                            .isManagingWell(review.isManagingWell())
+                            .isHelpful(review.isHelpful())
+                            .isGoodLearner(review.isGoodLearner())
+                            .isKeepingPromises(review.isKeepingPromises())
+                            .createdAt(review.getCreatedAt())
+                            .updatedAt(review.getUpdatedAt())
+                            .build();
+                })
                 .collect(Collectors.toList());
         
         return PageResponse.<ReviewResponse>builder()
@@ -176,7 +292,36 @@ public class ReviewService {
     @Transactional(readOnly = true)
     public List<ReviewResponse> getReviewsByGathering(Long gatheringId) {
         return reviewRepository.findAllByGatheringId(gatheringId).stream()
-                .map(ReviewResponse::of)
+                .map(review -> {
+                    // 리뷰 작성자가 해당 모임에서 참여한 밴드 세션 조회
+                    BandSession reviewerBandSession = gatheringParticipantRepository
+                            .findBandSessionByUserAndGathering(review.getReviewer(), review.getGathering().getId())
+                            .orElse(null); // 주최자의 경우 null
+                    
+                    return ReviewResponse.builder()
+                            .id(review.getId())
+                            .reviewerId(review.getReviewer().getId())
+                            .reviewerNickname(review.getReviewer().getNickname())
+                            .reviewerBandSession(reviewerBandSession)
+                            .revieweeId(review.getReviewee().getId())
+                            .revieweeNickname(review.getReviewee().getNickname())
+                            .gatheringId(review.getGathering().getId())
+                            .gatheringName(review.getGathering().getName())
+                            .gatheringThumbnail(review.getGathering().getThumbnail())
+                            .gatheringHostNickname(review.getGathering().getCreatedBy().getNickname())
+                            .content(review.getContent())
+                            .isPracticeHelped(review.isPracticeHelped())
+                            .isGoodWithMusic(review.isGoodWithMusic())
+                            .isGoodWithOthers(review.isGoodWithOthers())
+                            .isSharesPracticeResources(review.isSharesPracticeResources())
+                            .isManagingWell(review.isManagingWell())
+                            .isHelpful(review.isHelpful())
+                            .isGoodLearner(review.isGoodLearner())
+                            .isKeepingPromises(review.isKeepingPromises())
+                            .createdAt(review.getCreatedAt())
+                            .updatedAt(review.getUpdatedAt())
+                            .build();
+                })
                 .collect(Collectors.toList());
     }
     
@@ -287,7 +432,34 @@ public class ReviewService {
         List<Review> reviews = reviewRepository.findAllByRevieweeId(userId);
         List<ReviewResponse> reviewResponses = new ArrayList<>();
         for (Review review : reviews) {
-            reviewResponses.add(ReviewResponse.of(review));
+            // 리뷰 작성자가 해당 모임에서 참여한 밴드 세션 조회
+            BandSession reviewerBandSession = gatheringParticipantRepository
+                    .findBandSessionByUserAndGathering(review.getReviewer(), review.getGathering().getId())
+                    .orElse(null); // 주최자의 경우 null
+            
+            reviewResponses.add(ReviewResponse.builder()
+                    .id(review.getId())
+                    .reviewerId(review.getReviewer().getId())
+                    .reviewerNickname(review.getReviewer().getNickname())
+                    .reviewerBandSession(reviewerBandSession)
+                    .revieweeId(review.getReviewee().getId())
+                    .revieweeNickname(review.getReviewee().getNickname())
+                    .gatheringId(review.getGathering().getId())
+                    .gatheringName(review.getGathering().getName())
+                    .gatheringThumbnail(review.getGathering().getThumbnail())
+                    .gatheringHostNickname(review.getGathering().getCreatedBy().getNickname())
+                    .content(review.getContent())
+                    .isPracticeHelped(review.isPracticeHelped())
+                    .isGoodWithMusic(review.isGoodWithMusic())
+                    .isGoodWithOthers(review.isGoodWithOthers())
+                    .isSharesPracticeResources(review.isSharesPracticeResources())
+                    .isManagingWell(review.isManagingWell())
+                    .isHelpful(review.isHelpful())
+                    .isGoodLearner(review.isGoodLearner())
+                    .isKeepingPromises(review.isKeepingPromises())
+                    .createdAt(review.getCreatedAt())
+                    .updatedAt(review.getUpdatedAt())
+                    .build());
         }
 
         ReviewStatisticsResponse reviewStatistics = ReviewStatisticsResponse.of(reviews);

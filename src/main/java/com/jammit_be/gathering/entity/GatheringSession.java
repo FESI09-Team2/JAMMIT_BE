@@ -5,11 +5,13 @@ import com.jammit_be.common.enums.BandSession;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "gathering_session")
+@Slf4j
 public class GatheringSession {
 
     @Id
@@ -31,6 +33,10 @@ public class GatheringSession {
     private int currentCount;// 현재 모집된 인원 수
 
     public static GatheringSession create(BandSession bandSession, int recruitCount) {
+        if (bandSession == null) {
+            log.error("bandSession parameter is null!");
+            throw new IllegalArgumentException("bandSession cannot be null");
+        }
 
         GatheringSession session = new GatheringSession();
         session.name = bandSession;

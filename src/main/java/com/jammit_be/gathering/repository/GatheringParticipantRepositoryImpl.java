@@ -22,11 +22,7 @@ public class GatheringParticipantRepositoryImpl implements GatheringParticipantR
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<CompletedGatheringResponse> findCompletedGatheringsByUser(User user) {
-        if (user == null) {
-            // user가 null이면 예외 대신 빈 리스트 반환
-            return List.of(); // 또는 Collections.emptyList();
-        }
+    public List<CompletedGatheringResponse> findCompletedGatheringsByUser(String email) {
 
         QGathering gathering = QGathering.gathering;
         QGatheringParticipant gatheringParticipant = QGatheringParticipant.gatheringParticipant;
@@ -35,9 +31,7 @@ public class GatheringParticipantRepositoryImpl implements GatheringParticipantR
         BooleanBuilder builder = new BooleanBuilder();
 
         // 로그인한 사용자가 null이 아닌 경우에만 조건 추가
-        if (user != null) {
-            builder.and(gatheringParticipant.user.eq(user));
-        }
+        builder.and(gatheringParticipant.user.email.eq(email));
         // 참가자의 상태가 COMPLETED인 경우만 조회
         builder.and(gatheringParticipant.status.eq(ParticipantStatus.COMPLETED));
         // 모임 자체가 COMPLETED 상태인 경우만 조회
